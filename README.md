@@ -1517,3 +1517,1063 @@ For a complete list of Math methods and properties, visit the [MDN Math Referenc
     ```
 
 ---
+
+## 📄 JSON (JavaScript Object Notation)
+
+- <span style="color:#007acc">**What is JSON?**</span>
+  - <span style="color:#228B22">JSON is a lightweight data format used for storing and transporting data. It's based on JavaScript object syntax but is language-independent.</span>
+  - **Example:**
+    ```js
+    // JSON string
+    let jsonString = '{"name": "John", "age": 30, "city": "New York"}';
+    
+    // JavaScript object
+    let jsObject = {
+      name: "John",
+      age: 30,
+      city: "New York"
+    };
+    ```
+
+- <span style="color:#007acc">**JSON.stringify()**</span>
+  - <span style="color:#228B22">Converts a JavaScript object or value to a JSON string.</span>
+  - **Example:**
+    ```js
+    let person = {
+      name: "Alice",
+      age: 25,
+      hobbies: ["reading", "gaming"],
+      address: {
+        street: "123 Main St",
+        city: "Boston"
+      },
+      isStudent: true
+    };
+    
+    let jsonString = JSON.stringify(person);
+    console.log(jsonString);
+    // Output: {"name":"Alice","age":25,"hobbies":["reading","gaming"],"address":{"street":"123 Main St","city":"Boston"},"isStudent":true}
+    
+    // With formatting (pretty print)
+    let prettyJson = JSON.stringify(person, null, 2);
+    console.log(prettyJson);
+    // Output:
+    // {
+    //   "name": "Alice",
+    //   "age": 25,
+    //   "hobbies": ["reading", "gaming"],
+    //   "address": {
+    //     "street": "123 Main St",
+    //     "city": "Boston"
+    //   },
+    //   "isStudent": true
+    // }
+    ```
+
+- <span style="color:#007acc">**JSON.parse()**</span>
+  - <span style="color:#228B22">Converts a JSON string back to a JavaScript object.</span>
+  - **Example:**
+    ```js
+    let jsonString = '{"name": "Bob", "age": 30, "skills": ["JavaScript", "Python"]}';
+    let person = JSON.parse(jsonString);
+    
+    console.log(person.name);    // 'Bob'
+    console.log(person.age);     // 30
+    console.log(person.skills);  // ['JavaScript', 'Python']
+    console.log(person.skills[0]); // 'JavaScript'
+    ```
+
+- <span style="color:#007acc">**JSON.stringify() with Replacer Function**</span>
+  - <span style="color:#228B22">You can customize how values are converted using a replacer function.</span>
+  - **Example:**
+    ```js
+    let data = {
+      name: "John",
+      password: "secret123",
+      email: "john@example.com",
+      age: 25
+    };
+    
+    // Remove sensitive data
+    let safeJson = JSON.stringify(data, (key, value) => {
+      if (key === 'password') {
+        return undefined; // This property will be omitted
+      }
+      return value;
+    });
+    
+    console.log(safeJson);
+    // Output: {"name":"John","email":"john@example.com","age":25}
+    ```
+
+- <span style="color:#007acc">**JSON.stringify() with Array Replacer**</span>
+  - <span style="color:#228B22">You can specify which properties to include using an array.</span>
+  - **Example:**
+    ```js
+    let user = {
+      id: 1,
+      name: "Alice",
+      email: "alice@example.com",
+      password: "secret",
+      role: "admin",
+      lastLogin: "2023-01-15"
+    };
+    
+    // Only include specific properties
+    let publicInfo = JSON.stringify(user, ['id', 'name', 'email', 'role']);
+    console.log(publicInfo);
+    // Output: {"id":1,"name":"Alice","email":"alice@example.com","role":"admin"}
+    ```
+
+- <span style="color:#007acc">**Handling Special Values**</span>
+  - <span style="color:#228B22">JSON.stringify() handles special JavaScript values.</span>
+  - **Example:**
+    ```js
+    let data = {
+      string: "Hello",
+      number: 42,
+      boolean: true,
+      nullValue: null,
+      undefinedValue: undefined,
+      function: function() { return "test"; },
+      date: new Date(),
+      array: [1, 2, 3],
+      object: { key: "value" }
+    };
+    
+    let json = JSON.stringify(data);
+    console.log(json);
+    // Output: {"string":"Hello","number":42,"boolean":true,"nullValue":null,"date":"2023-01-15T10:30:00.000Z","array":[1,2,3],"object":{"key":"value"}}
+    // Note: undefined and functions are omitted
+    ```
+
+- <span style="color:#007acc">**Error Handling with JSON.parse()**</span>
+  - <span style="color:#228B22">Always wrap JSON.parse() in try-catch to handle invalid JSON.</span>
+  - **Example:**
+    ```js
+    function safeParse(jsonString) {
+      try {
+        return JSON.parse(jsonString);
+      } catch (error) {
+        console.error("Invalid JSON:", error.message);
+        return null;
+      }
+    }
+    
+    // Valid JSON
+    let valid = safeParse('{"name": "John", "age": 30}');
+    console.log(valid); // {name: "John", age: 30}
+    
+    // Invalid JSON
+    let invalid = safeParse('{"name": "John", "age": 30,}'); // Extra comma
+    console.log(invalid); // null
+    ```
+
+- <span style="color:#007acc">**Working with Arrays and Objects**</span>
+  - <span style="color:#228B22">JSON can represent complex nested structures.</span>
+  - **Example:**
+    ```js
+    let company = {
+      name: "Tech Corp",
+      employees: [
+        {
+          id: 1,
+          name: "Alice",
+          position: "Developer",
+          skills: ["JavaScript", "React"]
+        },
+        {
+          id: 2,
+          name: "Bob",
+          position: "Designer",
+          skills: ["Photoshop", "Figma"]
+        }
+      ],
+      departments: {
+        engineering: {
+          head: "Alice",
+          members: 5
+        },
+        design: {
+          head: "Bob",
+          members: 3
+        }
+      }
+    };
+    
+    let jsonString = JSON.stringify(company, null, 2);
+    console.log(jsonString);
+    // Output: Formatted JSON with all nested structures
+    
+    let parsedCompany = JSON.parse(jsonString);
+    console.log(parsedCompany.employees[0].name); // 'Alice'
+    console.log(parsedCompany.departments.engineering.head); // 'Alice'
+    ```
+
+---
+
+## ⚠️ Error Handling
+
+- <span style="color:#007acc">**Try-Catch Blocks**</span>
+  - <span style="color:#228B22">Used to handle errors gracefully without crashing the program.</span>
+  - **Example:**
+    ```js
+    try {
+      let result = 10 / 0;
+      console.log(result);
+    } catch (error) {
+      console.log("An error occurred:", error.message);
+    }
+    // Output: An error occurred: Infinity
+    ```
+
+- <span style="color:#007acc">**Try-Catch-Finally**</span>
+  - <span style="color:#228B22">Finally block always executes, regardless of whether an error occurred.</span>
+  - **Example:**
+    ```js
+    function divideNumbers(a, b) {
+      try {
+        if (b === 0) {
+          throw new Error("Division by zero is not allowed");
+        }
+        return a / b;
+      } catch (error) {
+        console.log("Error:", error.message);
+        return null;
+      } finally {
+        console.log("Division operation completed");
+      }
+    }
+    
+    console.log(divideNumbers(10, 2));  // 5, "Division operation completed"
+    console.log(divideNumbers(10, 0));  // null, "Division operation completed"
+    ```
+
+- <span style="color:#007acc">**Built-in Error Types**</span>
+  - <span style="color:#228B22">JavaScript has several built-in error types for different scenarios.</span>
+  - **Example:**
+    ```js
+    // ReferenceError - accessing undefined variable
+    try {
+      console.log(undefinedVariable);
+    } catch (error) {
+      console.log("ReferenceError:", error.message);
+    }
+    
+    // TypeError - wrong data type
+    try {
+      let str = "Hello";
+      str.toUpperCase = null;
+      str.toUpperCase();
+    } catch (error) {
+      console.log("TypeError:", error.message);
+    }
+    
+    // SyntaxError - invalid syntax
+    try {
+      eval("let x = ;"); // Invalid syntax
+    } catch (error) {
+      console.log("SyntaxError:", error.message);
+    }
+    
+    // RangeError - invalid array length
+    try {
+      let arr = new Array(-1);
+    } catch (error) {
+      console.log("RangeError:", error.message);
+    }
+    ```
+
+- <span style="color:#007acc">**Custom Error Classes**</span>
+  - <span style="color:#228B22">You can create custom error classes by extending the Error class.</span>
+  - **Example:**
+    ```js
+    class ValidationError extends Error {
+      constructor(message, field) {
+        super(message);
+        this.name = "ValidationError";
+        this.field = field;
+      }
+    }
+    
+    class NetworkError extends Error {
+      constructor(message, statusCode) {
+        super(message);
+        this.name = "NetworkError";
+        this.statusCode = statusCode;
+      }
+    }
+    
+    function validateUser(user) {
+      if (!user.name) {
+        throw new ValidationError("Name is required", "name");
+      }
+      if (!user.email) {
+        throw new ValidationError("Email is required", "email");
+      }
+      if (user.age < 18) {
+        throw new ValidationError("User must be 18 or older", "age");
+      }
+    }
+    
+    try {
+      validateUser({ name: "John", age: 16 });
+    } catch (error) {
+      if (error instanceof ValidationError) {
+        console.log(`Validation failed for ${error.field}: ${error.message}`);
+      }
+    }
+    ```
+
+- <span style="color:#007acc">**Error Handling with Async Functions**</span>
+  - <span style="color:#228B22">Error handling in asynchronous operations using try-catch with async/await.</span>
+  - **Example:**
+    ```js
+    async function fetchUserData(userId) {
+      try {
+        const response = await fetch(`https://api.example.com/users/${userId}`);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const userData = await response.json();
+        return userData;
+      } catch (error) {
+        console.log("Failed to fetch user data:", error.message);
+        return null;
+      }
+    }
+    
+    // Usage
+    fetchUserData(123).then(user => {
+      if (user) {
+        console.log("User data:", user);
+      }
+    });
+    ```
+
+- <span style="color:#007acc">**Error Handling with Promises**</span>
+  - <span style="color:#228B22">Using .catch() to handle errors in Promise chains.</span>
+  - **Example:**
+    ```js
+    function processData(data) {
+      return new Promise((resolve, reject) => {
+        if (!data) {
+          reject(new Error("No data provided"));
+          return;
+        }
+        
+        if (typeof data !== 'string') {
+          reject(new Error("Data must be a string"));
+          return;
+        }
+        
+        // Simulate processing
+        setTimeout(() => {
+          resolve(data.toUpperCase());
+        }, 1000);
+      });
+    }
+    
+    processData("hello world")
+      .then(result => {
+        console.log("Processed:", result);
+      })
+      .catch(error => {
+        console.log("Error:", error.message);
+      });
+    
+    processData(null)
+      .then(result => {
+        console.log("Processed:", result);
+      })
+      .catch(error => {
+        console.log("Error:", error.message);
+      });
+    ```
+
+- <span style="color:#007acc">**Error Handling Best Practices**</span>
+  - <span style="color:#228B22">Guidelines for effective error handling.</span>
+  - **Example:**
+    ```js
+    class DatabaseError extends Error {
+      constructor(message, code) {
+        super(message);
+        this.name = "DatabaseError";
+        this.code = code;
+      }
+    }
+    
+    function connectToDatabase() {
+      return new Promise((resolve, reject) => {
+        // Simulate database connection
+        const random = Math.random();
+        
+        if (random < 0.3) {
+          reject(new DatabaseError("Connection timeout", "TIMEOUT"));
+        } else if (random < 0.6) {
+          reject(new DatabaseError("Authentication failed", "AUTH_FAILED"));
+        } else {
+          resolve({ status: "connected", id: "db_123" });
+        }
+      });
+    }
+    
+    async function initializeApp() {
+      try {
+        console.log("Connecting to database...");
+        const db = await connectToDatabase();
+        console.log("Database connected:", db);
+        
+        // Continue with app initialization
+        console.log("App initialized successfully");
+      } catch (error) {
+        if (error instanceof DatabaseError) {
+          switch (error.code) {
+            case "TIMEOUT":
+              console.log("Database connection timed out. Retrying...");
+              break;
+            case "AUTH_FAILED":
+              console.log("Database authentication failed. Check credentials.");
+              break;
+            default:
+              console.log("Database error:", error.message);
+          }
+        } else {
+          console.log("Unexpected error:", error.message);
+        }
+      }
+    }
+    
+    initializeApp();
+    ```
+
+---
+
+## 🌐 The DOM (Document Object Model) in Web Development
+
+- <span style="color:#007acc">**What is the DOM?**</span>
+  - <span style="color:#228B22">The DOM is a programming interface for web documents. It represents the structure of an HTML or XML document as a tree of objects (nodes). Each element, attribute, and piece of text becomes a node in this tree.</span>
+  - <span style="color:#228B22">JavaScript can interact with the DOM to dynamically change the content, structure, and style of a web page.</span>
+  - **Example:**
+    ```html
+    <body>
+      <h1 id="main-title">Hello World</h1>
+      <p class="intro">Welcome to my website.</p>
+      <button>Click Me</button>
+    </body>
+    ```
+
+---
+
+### 🏷️ Accessing Elements in the DOM
+
+- <span style="color:#007acc">**By Tag Name**</span>
+  - <span style="color:#228B22">Use <code>getElementsByTagName()</code> to get all elements with a specific tag (returns an HTMLCollection).</span>
+  - **Example:**
+    ```js
+    let paragraphs = document.getElementsByTagName('p');
+    console.log(paragraphs[0].textContent); // 'Welcome to my website.'
+    ```
+
+- <span style="color:#007acc">**By ID**</span>
+  - <span style="color:#228B22">Use <code>getElementById()</code> to get a single element with a specific ID (IDs should be unique).</span>
+  - **Example:**
+    ```js
+    let title = document.getElementById('main-title');
+    title.textContent = 'Welcome!'; // Changes the heading text
+    ```
+
+- <span style="color:#007acc">**By Class Name**</span>
+  - <span style="color:#228B22">Use <code>getElementsByClassName()</code> to get all elements with a specific class (returns an HTMLCollection).</span>
+  - **Example:**
+    ```js
+    let intros = document.getElementsByClassName('intro');
+    intros[0].style.color = 'blue'; // Changes text color to blue
+    ```
+
+- <span style="color:#007acc">**By CSS Selector**</span>
+  - <span style="color:#228B22">Use <code>querySelector()</code> to get the first element matching a CSS selector, or <code>querySelectorAll()</code> for all matches (returns a NodeList).</span>
+  - **Example:**
+    ```js
+    let firstButton = document.querySelector('button');
+    firstButton.style.backgroundColor = 'yellow';
+
+    let allParagraphs = document.querySelectorAll('p.intro');
+    allParagraphs.forEach(p => p.style.fontWeight = 'bold');
+    ```
+
+---
+
+### 🛠️ Modifying HTML and CSS with JavaScript
+
+- <span style="color:#007acc">**Changing Content**</span>
+  - <span style="color:#228B22">Use <code>textContent</code> or <code>innerHTML</code> to change the text or HTML inside an element.</span>
+  - **Example:**
+    ```js
+    let title = document.getElementById('main-title');
+    title.textContent = 'New Title';
+    // or
+    title.innerHTML = '<span style="color:red">New Title</span>';
+    ```
+
+- <span style="color:#007acc">**Changing Styles**</span>
+  - <span style="color:#228B22">Access the <code>style</code> property to change CSS directly from JavaScript.</span>
+  - **Example:**
+    ```js
+    let button = document.querySelector('button');
+    button.style.backgroundColor = 'green';
+    button.style.fontSize = '20px';
+    ```
+
+- <span style="color:#007acc">**Adding/Removing Classes**</span>
+  - <span style="color:#228B22">Use <code>classList</code> to add, remove, or toggle CSS classes.</span>
+  - **Example:**
+    ```js
+    let para = document.querySelector('p');
+    para.classList.add('highlight');
+    para.classList.remove('intro');
+    para.classList.toggle('active');
+    ```
+
+---
+
+### 🖱️ Handling Events
+
+- <span style="color:#007acc">**Adding Event Listeners**</span>
+  - <span style="color:#228B22">Use <code>addEventListener()</code> to run code when users interact with elements (click, mouseover, etc.).</span>
+  - **Example:**
+    ```js
+    let button = document.querySelector('button');
+    button.addEventListener('click', function() {
+      alert('Button was clicked!');
+    });
+    ```
+
+---
+
+### 🧑‍💻 Example: Putting It All Together
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    .highlight { color: orange; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1 id="main-title">Hello World</h1>
+  <p class="intro">Welcome to my website.</p>
+  <button>Click Me</button>
+
+  <script>
+    // Access by ID
+    let title = document.getElementById('main-title');
+    title.textContent = 'Welcome to the DOM!';
+
+    // Access by class
+    let intro = document.querySelector('.intro');
+    intro.classList.add('highlight');
+
+    // Access by tag
+    let button = document.querySelector('button');
+    button.addEventListener('click', function() {
+      alert('Button clicked!');
+      button.style.backgroundColor = 'red';
+    });
+  </script>
+</body>
+</html>
+```
+
+- <span style="color:#228B22">This example shows how to access and modify elements by ID, class, and tag, and how to handle events and change styles dynamically.</span>
+
+---
+
+### 📚 More Resources
+
+- [MDN: Introduction to the DOM](https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model/Introduction)
+- [MDN: Document.querySelector()](https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector)
+- [MDN: HTML DOM API Reference](https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model)
+
+---
+
+### 🖱️ Event Listeners with Functions
+
+- <span style="color:#007acc">**What is an Event Listener?**</span>
+  - <span style="color:#228B22">An event listener is a way to run JavaScript code in response to user actions (like clicks, mouse movements, key presses, etc.) on elements in the DOM.</span>
+  - <span style="color:#228B22">You attach an event listener to an element using <code>addEventListener()</code>. The listener takes two main arguments: the event type (like 'click') and a function to run when the event happens.</span>
+
+#### 📌 Syntax
+
+```js
+element.addEventListener(eventType, handlerFunction);
+```
+- <span style="color:#228B22">Where <code>eventType</code> is a string (e.g., 'click', 'mouseover', 'keydown'), and <code>handlerFunction</code> is the function to execute.</span>
+
+#### 🟢 Example 1: Using a Named Function
+
+```html
+<button id="greetBtn">Greet</button>
+<p id="message"></p>
+
+<script>
+  function showGreeting() {
+    document.getElementById('message').textContent = 'Hello, user!';
+  }
+
+  let button = document.getElementById('greetBtn');
+  button.addEventListener('click', showGreeting);
+</script>
+```
+- <span style="color:#228B22">Here, the <code>showGreeting</code> function is defined separately and passed as the event handler. When the button is clicked, the function runs and updates the paragraph text.</span>
+
+#### 🟢 Example 2: Using an Anonymous Function
+
+```html
+<button id="colorBtn">Change Color</button>
+<div id="box" style="width:100px; height:100px; background:lightgray;"></div>
+
+<script>
+  document.getElementById('colorBtn').addEventListener('click', function() {
+    document.getElementById('box').style.backgroundColor = 'skyblue';
+  });
+</script>
+```
+- <span style="color:#228B22">Here, an anonymous function is used directly in <code>addEventListener</code>. When the button is clicked, the box's background color changes.</span>
+
+#### 🟢 Example 3: Using an Arrow Function
+
+```html
+<input id="nameInput" placeholder="Type your name...">
+<button id="sayHiBtn">Say Hi</button>
+<p id="output"></p>
+
+<script>
+  document.getElementById('sayHiBtn').addEventListener('click', () => {
+    const name = document.getElementById('nameInput').value;
+    document.getElementById('output').textContent = `Hi, ${name || 'stranger'}!`;
+  });
+</script>
+```
+- <span style="color:#228B22">This example uses an arrow function as the event handler. When the button is clicked, it reads the input value and displays a greeting.</span>
+
+#### 🟢 Example 4: Passing the Event Object
+
+```html
+<button id="logBtn">Log Event</button>
+
+<script>
+  document.getElementById('logBtn').addEventListener('click', function(event) {
+    console.log('Event type:', event.type);
+    console.log('Button text:', event.target.textContent);
+  });
+</script>
+```
+- <span style="color:#228B22">The handler function receives an <code>event</code> object with information about the event (type, target, etc.). This is useful for advanced event handling.</span>
+
+#### 🟢 Example 5: Removing an Event Listener
+
+```html
+<button id="onceBtn">Click Me Once</button>
+<p id="onceMsg"></p>
+
+<script>
+  function handleOnce() {
+    document.getElementById('onceMsg').textContent = 'Button clicked! Listener removed.';
+    document.getElementById('onceBtn').removeEventListener('click', handleOnce);
+  }
+
+  document.getElementById('onceBtn').addEventListener('click', handleOnce);
+</script>
+```
+- <span style="color:#228B22">You can remove an event listener using <code>removeEventListener</code>. In this example, the button can only be clicked once before the handler is removed.</span>
+
+---
+
+#### 📚 More on Events
+- <span style="color:#228B22">Common event types: <code>click</code>, <code>mouseover</code>, <code>mouseout</code>, <code>keydown</code>, <code>keyup</code>, <code>submit</code>, <code>change</code>, etc.</span>
+- <span style="color:#228B22">You can attach multiple listeners to the same element and event type.</span>
+- <span style="color:#228B22">Event listeners are the foundation of interactive web pages.</span>
+
+- [MDN: addEventListener()](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener)
+- [MDN: Event reference](https://developer.mozilla.org/en-US/docs/Web/Events)
+
+---
+
+## 🌐 APIs and Web Storage API
+
+### 🤖 What is an API?
+- <span style="color:#007acc">**API (Application Programming Interface)**</span>
+  - <span style="color:#228B22">An API is a set of rules and tools that allows different software applications to communicate with each other. In web development, APIs are often used to interact with web services, browsers, or the underlying system.</span>
+  - <span style="color:#228B22">Examples: Fetching data from a server (Web APIs), accessing browser features (like storage, geolocation), or using third-party services (like Google Maps API).</span>
+
+---
+
+### 💾 Web Storage API
+- <span style="color:#007acc">**What is the Web Storage API?**</span>
+  - <span style="color:#228B22">The Web Storage API provides mechanisms by which browsers can store key-value pairs locally within the user's browser. It is more secure and faster than using cookies.</span>
+  - <span style="color:#228B22">There are two main types:</span>
+    - <b>localStorage</b>: Stores data with no expiration date. Data persists even after the browser is closed and reopened.
+    - <b>sessionStorage</b>: Stores data for one session. Data is cleared when the page session ends (tab or window is closed).
+
+#### 📦 localStorage
+- <span style="color:#228B22">Use <code>localStorage</code> to store data that should persist across browser sessions.</span>
+- <span style="color:#228B22">Data is stored as strings. You can store objects/arrays by converting them to JSON.</span>
+
+**Basic Usage:**
+```js
+// Set an item
+localStorage.setItem('username', 'Alice');
+
+// Get an item
+let user = localStorage.getItem('username'); // 'Alice'
+
+// Remove an item
+localStorage.removeItem('username');
+
+// Clear all items
+localStorage.clear();
+```
+
+**Storing Objects:**
+```js
+let user = { name: 'Bob', age: 30 };
+localStorage.setItem('user', JSON.stringify(user));
+
+let storedUser = JSON.parse(localStorage.getItem('user'));
+console.log(storedUser.name); // 'Bob'
+```
+
+#### 📦 sessionStorage
+- <span style="color:#228B22">Use <code>sessionStorage</code> to store data for the duration of a page session (as long as the tab/window is open).</span>
+- <span style="color:#228B22">API is identical to <code>localStorage</code>, but data is cleared when the session ends.</span>
+
+**Basic Usage:**
+```js
+// Set an item
+sessionStorage.setItem('theme', 'dark');
+
+// Get an item
+let theme = sessionStorage.getItem('theme'); // 'dark'
+
+// Remove an item
+sessionStorage.removeItem('theme');
+
+// Clear all items
+sessionStorage.clear();
+```
+
+**Storing Arrays:**
+```js
+let colors = ['red', 'green', 'blue'];
+sessionStorage.setItem('colors', JSON.stringify(colors));
+
+let storedColors = JSON.parse(sessionStorage.getItem('colors'));
+console.log(storedColors[1]); // 'green'
+```
+
+---
+
+### 🧑‍💻 Example: Using localStorage and sessionStorage in a Web Page
+
+```html
+<!DOCTYPE html>
+<html>
+<body>
+  <input id="nameInput" placeholder="Enter your name">
+  <button id="saveBtn">Save to localStorage</button>
+  <button id="loadBtn">Load from localStorage</button>
+  <p id="output"></p>
+
+  <script>
+    document.getElementById('saveBtn').addEventListener('click', function() {
+      const name = document.getElementById('nameInput').value;
+      localStorage.setItem('savedName', name);
+      alert('Name saved!');
+    });
+
+    document.getElementById('loadBtn').addEventListener('click', function() {
+      const name = localStorage.getItem('savedName') || 'No name found';
+      document.getElementById('output').textContent = name;
+    });
+  </script>
+</body>
+</html>
+```
+
+- <span style="color:#228B22">This example lets users save and load their name using <code>localStorage</code>. You can adapt it for <code>sessionStorage</code> by replacing <code>localStorage</code> with <code>sessionStorage</code>.</span>
+
+---
+
+### ⚠️ Notes and Best Practices
+- <span style="color:#228B22">Storage is limited (usually 5-10MB per origin).</span>
+- <span style="color:#228B22">Only strings can be stored directly. Use <code>JSON.stringify</code> and <code>JSON.parse</code> for objects/arrays.</span>
+- <span style="color:#228B22">Data is accessible to any script on the same origin (domain + protocol + port).</span>
+- <span style="color:#228B22">Do not store sensitive information (like passwords or tokens) in localStorage/sessionStorage.</span>
+
+---
+
+### 📚 More Resources
+- [MDN: Web Storage API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API)
+- [MDN: localStorage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage)
+- [MDN: sessionStorage](https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage)
+
+---
+
+## 📦 JavaScript Modules: import & export
+
+### 📚 What are Modules?
+- <span style="color:#007acc">**Modules**</span> allow you to split your code into separate files. Each file is a module that can export variables, functions, or classes, and import them from other modules. This helps organize code, avoid naming conflicts, and enable code reuse.
+- <span style="color:#228B22">Modules are supported natively in modern browsers and Node.js (with some differences).</span>
+
+---
+
+### 🚚 Exporting from a Module
+
+- <span style="color:#007acc">**Named Exports**</span>
+  - <span style="color:#228B22">You can export multiple values from a module by name.</span>
+  - **Example:**
+    ```js
+    // mathUtils.js
+    export const PI = 3.14159;
+    export function add(a, b) {
+      return a + b;
+    }
+    export class Calculator {
+      multiply(a, b) { return a * b; }
+    }
+    ```
+
+- <span style="color:#007acc">**Default Export**</span>
+  - <span style="color:#228B22">A module can have one default export. Useful for exporting a single main value (function, class, object, etc.).</span>
+  - **Example:**
+    ```js
+    // greet.js
+    export default function greet(name) {
+      return `Hello, ${name}!`;
+    }
+    ```
+
+- <span style="color:#007acc">**Exporting at the End**</span>
+  - <span style="color:#228B22">You can export after declaration, or all at once at the end.</span>
+  - **Example:**
+    ```js
+    // colors.js
+    const red = '#ff0000';
+    const green = '#00ff00';
+    const blue = '#0000ff';
+    export { red, green, blue };
+    ```
+
+---
+
+### 📥 Importing from a Module
+
+- <span style="color:#007acc">**Importing Named Exports**</span>
+  - <span style="color:#228B22">Use curly braces to import specific exports by name.</span>
+  - **Example:**
+    ```js
+    import { PI, add } from './mathUtils.js';
+    console.log(add(2, 3)); // 5
+    ```
+
+- <span style="color:#007acc">**Importing Default Export**</span>
+  - <span style="color:#228B22">No curly braces. You can name the import whatever you like.</span>
+  - **Example:**
+    ```js
+    import greet from './greet.js';
+    console.log(greet('Alice')); // 'Hello, Alice!'
+    ```
+
+- <span style="color:#007acc">**Importing Everything as an Object**</span>
+  - <span style="color:#228B22">Use <code>* as</code> to import all named exports as properties of an object.</span>
+  - **Example:**
+    ```js
+    import * as Colors from './colors.js';
+    console.log(Colors.red); // '#ff0000'
+    ```
+
+- <span style="color:#007acc">**Renaming Imports/Exports**</span>
+  - <span style="color:#228B22">You can rename exports or imports using <code>as</code>.</span>
+  - **Example:**
+    ```js
+    // In module
+    export { add as sum };
+    // In another file
+    import { sum } from './mathUtils.js';
+    ```
+
+---
+
+### 📝 Example: Using Modules in Practice
+
+**mathUtils.js**
+```js
+export const PI = 3.14;
+export function square(x) { return x * x; }
+export default function cube(x) { return x * x * x; }
+```
+
+**main.js**
+```js
+import cube, { PI, square } from './mathUtils.js';
+console.log(PI);         // 3.14
+console.log(square(4));  // 16
+console.log(cube(3));    // 27
+```
+
+---
+
+### ⚠️ Notes and Best Practices
+- <span style="color:#228B22">Module files must use <code>type="module"</code> in the browser:</span>
+  ```html
+  <script type="module" src="main.js"></script>
+  ```
+- <span style="color:#228B22">Module imports are static (must be at the top level, not inside functions or blocks).</span>
+- <span style="color:#228B22">File paths must be correct and usually include the file extension (e.g., <code>./utils.js</code>).</span>
+- <span style="color:#228B22">Modules are loaded once and cached. Imports are read-only views of the exported values.</span>
+- <span style="color:#228B22">Use modules to organize code, avoid polluting the global scope, and enable code reuse.</span>
+
+---
+
+### 📚 More Resources
+- [MDN: JavaScript Modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules)
+- [MDN: import](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import)
+- [MDN: export](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/export)
+
+---
+
+## 🔼 Higher Order Functions
+
+### 🧠 What is a Higher Order Function?
+- <span style="color:#007acc">**Higher order functions**</span> are functions that do at least one of the following:
+  - Take one or more functions as arguments (parameters)
+  - Return a function as a result
+- <span style="color:#228B22">They are a key feature of JavaScript and enable powerful patterns like callbacks, function composition, and functional programming.</span>
+
+---
+
+### 📥 Passing Functions as Arguments
+
+- <span style="color:#228B22">You can pass a function to another function to customize its behavior.</span>
+- **Example: Custom forEach**
+  ```js
+  function forEach(array, callback) {
+    for (let i = 0; i < array.length; i++) {
+      callback(array[i], i);
+    }
+  }
+
+  forEach([1, 2, 3], function(num, idx) {
+    console.log(`Index ${idx}: ${num}`);
+  });
+  // Output: Index 0: 1, Index 1: 2, Index 2: 3
+  ```
+
+---
+
+### 📤 Returning Functions from Functions
+
+- <span style="color:#228B22">A function can return another function, creating a closure.</span>
+- **Example: Multiplier Factory**
+  ```js
+  function makeMultiplier(factor) {
+    return function(x) {
+      return x * factor;
+    };
+  }
+
+  const double = makeMultiplier(2);
+  const triple = makeMultiplier(3);
+
+  console.log(double(5)); // 10
+  console.log(triple(5)); // 15
+  ```
+
+---
+
+### 🔄 Common Higher Order Array Methods
+
+- <span style="color:#228B22">JavaScript arrays have several built-in higher order functions:</span>
+
+#### **.map()**
+- <span style="color:#228B22">Creates a new array by applying a function to every element.</span>
+- **Example:**
+  ```js
+  let nums = [1, 2, 3];
+  let squares = nums.map(x => x * x);
+  console.log(squares); // [1, 4, 9]
+  ```
+
+#### **.filter()**
+- <span style="color:#228B22">Creates a new array with only elements that pass a test function.</span>
+- **Example:**
+  ```js
+  let nums = [1, 2, 3, 4, 5];
+  let evens = nums.filter(x => x % 2 === 0);
+  console.log(evens); // [2, 4]
+  ```
+
+#### **.reduce()**
+- <span style="color:#228B22">Reduces an array to a single value by applying a function cumulatively.</span>
+- **Example:**
+  ```js
+  let nums = [1, 2, 3, 4];
+  let sum = nums.reduce((acc, curr) => acc + curr, 0);
+  console.log(sum); // 10
+  ```
+
+#### **.forEach()**
+- <span style="color:#228B22">Executes a function for each array element (does not return a new array).</span>
+- **Example:**
+  ```js
+  let fruits = ['apple', 'banana', 'cherry'];
+  fruits.forEach(fruit => console.log(fruit.toUpperCase()));
+  // Output: APPLE BANANA CHERRY
+  ```
+
+#### **.find()**
+- <span style="color:#228B22">Returns the first element that satisfies the provided testing function.</span>
+- **Example:**
+  ```js
+  let users = [
+    { id: 1, name: 'Alice' },
+    { id: 2, name: 'Bob' }
+  ];
+  let user = users.find(u => u.name === 'Bob');
+  console.log(user); // { id: 2, name: 'Bob' }
+  ```
+
+---
+
+### 🧩 Example: Combining Higher Order Functions
+
+```js
+let numbers = [1, 2, 3, 4, 5, 6];
+
+// Double the even numbers and sum them
+let result = numbers
+  .filter(n => n % 2 === 0)   // [2, 4, 6]
+  .map(n => n * 2)            // [4, 8, 12]
+  .reduce((sum, n) => sum + n, 0); // 24
+
+console.log(result); // 24
+```
+
+---
+
+### ⚠️ Notes and Best Practices
+- <span style="color:#228B22">Higher order functions make code more concise, expressive, and reusable.</span>
+- <span style="color:#228B22">They are the foundation of functional programming in JavaScript.</span>
+- <span style="color:#228B22">You can create your own higher order functions for custom logic.</span>
+
+---
+
+### 📚 More Resources
+- [MDN: Functions - Higher order functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Functions#higher-order-functions)
+- [MDN: Array.prototype.map()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map)
+- [MDN: Array.prototype.filter()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter)
+- [MDN: Array.prototype.reduce()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce)
